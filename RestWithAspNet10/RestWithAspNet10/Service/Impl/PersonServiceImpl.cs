@@ -1,52 +1,58 @@
 ﻿using RestWithAspNet10.Model;
+using RestWithAspNet10.Model.Context;
 
 namespace RestWithAspNet10.Service.Impl
 {
     public class PersonServiceImpl : IPersonService
     {
+        private MSSQLContext _context;
+        public PersonServiceImpl(MSSQLContext context)
+        {
+            _context = context;
+        }
+
 
         public List<Person> FindAll()
         {
-           List<Person> persons = new List<Person>();
-            for(int i = 0; i < 8; i++)
-            {
-                persons.Add(MockPerson(i));
-            }
-            return persons;
+           return _context.Persons.ToList();
         }
 
-        public Person FindById(long id)
+        public Person? FindById(long id)
         {
-            var person = MockPerson((int)id);
-                return person;
+            return _context.Persons.Find(id);
         }
         public Person Create(Person person)
         {
-            person.Id = new Random().Next(1,1000); // Simulate ID
+            _context.Add(person);
+            _context.SaveChanges();
             return person;
         }
 
         public Person Update(Person person)
         {
+            var existingPerson = _context.Persons.Find(person.Id);
+            if(existingPerson == null)
+            {
+                return null;
+            }
+            
+            _context.Entry(existingPerson).CurrentValues.SetValues(person);
+            _context.SaveChanges();
             return person;
         }
         public void Delete(long id)
         {
-            // Simulate deletion logic
+            var existingPerson = _context.Persons.Find(id);
+            if (existingPerson == null)
+            {
+                return ;
+            }
+
+            _context.Remove(existingPerson);
+            _context.SaveChanges();
         }
 
-        public Person MockPerson(int i)
-        {
-            var person = new Person
-            {
-                Id = new Random().Next(1, 1000),
-                FirstName = "John",
-                LastName = "Doe",
-                Address = " 123 street",
-                Gender = "Male"
-            };
-            return person;
-        }
+        
 
     }
 }
