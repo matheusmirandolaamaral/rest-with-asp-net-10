@@ -1,4 +1,6 @@
 using RestWithAspNet10.Configurations;
+using RestWithAspNet10.Repository;
+using RestWithAspNet10.Repository.Impl;
 using RestWithAspNet10.Service;
 using RestWithAspNet10.Service.Impl;
 
@@ -12,6 +14,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddScoped<IPersonService,PersonServiceImpl>();
+builder.Services.AddScoped<IPersonRepository,PersonRepositoryImpl>();
 
 var app = builder.Build();
 
