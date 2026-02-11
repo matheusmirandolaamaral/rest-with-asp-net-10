@@ -28,7 +28,7 @@ namespace RestWithAspNet10.Repository.Impl
             return book;
         }
 
-        public Book Update(Book book)
+        public Book? Update(Book book)
         {
             var existingBook = _context.Books.Find(book.Id);
             if(existingBook == null)

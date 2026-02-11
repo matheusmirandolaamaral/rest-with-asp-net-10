@@ -7,7 +7,7 @@ namespace RestWithAspNet10.Repository
         Book Create(Book book);
         Book? FindById(long id);
         List<Book> FindAll();
-        Book Update(Book book);
+        Book? Update(Book book);
         void Delete(long id);
     }
 }

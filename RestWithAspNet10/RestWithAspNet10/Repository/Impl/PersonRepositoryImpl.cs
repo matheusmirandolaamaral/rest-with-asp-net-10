@@ -28,7 +28,7 @@ namespace RestWithAspNet10.Repository.Impl
             return person;
         }
 
-        public Person Update(Person person)
+        public Person? Update(Person person)
         {
             var existingPerson = _context.Persons.Find(person.Id);
             if (existingPerson == null)

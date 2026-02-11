@@ -27,7 +27,7 @@ namespace RestWithAspNet10.Service.Impl
         {
             return _repository.Create(book);
         }
-        public Book Update(Book book)
+        public Book? Update(Book book)
         {
            return _repository.Update(book);
         }

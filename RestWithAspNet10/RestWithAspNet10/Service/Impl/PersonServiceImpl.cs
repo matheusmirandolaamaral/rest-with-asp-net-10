@@ -27,7 +27,7 @@ namespace RestWithAspNet10.Service.Impl
             return _repository.Create(person);
         }
 
-        public Person Update(Person person)
+        public Person? Update(Person person)
         {
             return _repository.Update(person);
         }
