@@ -24,7 +24,7 @@ namespace RestWithAspNet10.Controllers
             _logger.LogInformation("Fetching all books");
             return Ok(_bookService.FindAll());
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Get(long id)
         {
             _logger.LogInformation("Fetching books with ID {id}", id);
@@ -64,7 +64,7 @@ namespace RestWithAspNet10.Controllers
             return Ok(updatebook);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
             _logger.LogInformation("Deleting book with ID {id}", id);
