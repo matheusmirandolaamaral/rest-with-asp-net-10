@@ -21,7 +21,7 @@ namespace RestWithAspNet10.Model
         public string Author { get; set; }
 
         [Required]
-        [Column("price")]
+        [Column("price", TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
         [Required]
