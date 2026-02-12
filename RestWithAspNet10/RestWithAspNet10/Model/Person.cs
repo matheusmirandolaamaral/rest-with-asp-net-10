@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using RestWithAspNet10.Model.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestWithAspNet10.Model
 {
     [Table("person")]
-    public class Person
+    public class Person : BaseEntity
     {
-        [Key]
-        [Column("id")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
-
 
         [Required]
         [Column("first_name", TypeName ="varchar(80)")]
