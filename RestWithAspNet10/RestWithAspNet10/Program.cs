@@ -15,11 +15,13 @@ builder.Services.AddControllers();
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddEvolveConfiguration(builder.Configuration,builder.Environment);
 
-builder.Services.AddScoped<IPersonRepository,PersonRepositoryImpl>();
+builder.Services.AddScoped<IBookService, BookServiceImpl>();
 builder.Services.AddScoped<IPersonService,PersonServiceImpl>();
 
-builder.Services.AddScoped<IBookRepository, BookRepositoryImpl>();
-builder.Services.AddScoped<IBookService, BookServiceImpl>();
+builder.Services.AddScoped<IPersonRepository,PersonRepositoryImpl>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
 
 var app = builder.Build();
 
