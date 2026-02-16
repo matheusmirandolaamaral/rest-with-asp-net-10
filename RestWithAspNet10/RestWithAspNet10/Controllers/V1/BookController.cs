@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using RestWithAspNet10.Data.DTO;
-using RestWithAspNet10.Model;
+﻿using Microsoft.AspNetCore.Mvc;
+using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Service;
 
 
-namespace RestWithAspNet10.Controllers
+namespace RestWithAspNet10.Controllers.V1
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v1")]
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
@@ -49,6 +47,8 @@ namespace RestWithAspNet10.Controllers
                 _logger.LogError("Failed to create book");
                 return NotFound();
             }
+            Response.Headers.Add("X-API-Deprecated", "true");
+            Response.Headers.Add("X-API-Deprecation-Date", "2026-12-31");
             return Ok(books);
         }
 

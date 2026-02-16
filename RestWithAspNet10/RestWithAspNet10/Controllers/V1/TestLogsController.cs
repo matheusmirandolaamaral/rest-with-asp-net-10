@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace RestWithAspNet10.Controllers
+namespace RestWithAspNet10.Controllers.V1
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v1")]
 
     public class TestLogsController : ControllerBase
     {

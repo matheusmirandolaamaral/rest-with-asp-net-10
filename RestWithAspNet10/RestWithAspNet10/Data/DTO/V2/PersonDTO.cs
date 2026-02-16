@@ -1,4 +1,4 @@
-﻿namespace RestWithAspNet10.Data.DTO
+﻿namespace RestWithAspNet10.Data.DTO.V2
 {
    
     public class PersonDTO
@@ -12,5 +12,6 @@
         public string Address { get; set; }
 
         public string Gender { get; set; }
+        public DateTime? BirthDay { get; set; }
     }
 }

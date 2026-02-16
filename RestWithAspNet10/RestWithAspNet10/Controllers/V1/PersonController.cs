@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using RestWithAspNet10.Data.DTO;
-using RestWithAspNet10.Model;
+﻿using Microsoft.AspNetCore.Mvc;
+using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Service;
-using RestWithAspNet10.Service.Impl;
 
-namespace RestWithAspNet10.Controllers
+
+namespace RestWithAspNet10.Controllers.V1
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v1")]
     public class PersonController : ControllerBase
     {
         private readonly IPersonService _personService;

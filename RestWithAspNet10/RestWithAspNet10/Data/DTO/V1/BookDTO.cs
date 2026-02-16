@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RestWithAspNet10.Data.DTO
+namespace RestWithAspNet10.Data.DTO.V1
 {
     public class BookDTO 
     {
