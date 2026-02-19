@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Options;
 using RestWithAspNet10.Data.Converter.Impl;
 using RestWithAspNet10.Data.DTO.V2;
 using RestWithAspNet10.Model;
@@ -106,7 +107,7 @@ namespace RestWithAspNet10.Tests
             person.Should().BeNull();
         }
 
-
+        // List PersonDTO to List Person
 
         [Fact]
         public void ParseList_ShouldConvertPersonDTOListToPersonList()
@@ -168,5 +169,67 @@ namespace RestWithAspNet10.Tests
             var listPerson = _converter.ParseList(dto);
             listPerson.Should().BeNull();
         }
+
+
+        // List Person to List PersonDTO
+
+        [Fact]
+        public void ParseList_ShouldConvertPersonListToPersonDTOList()
+        {
+            //Arrange
+            var entity = new List<Person>
+            {
+                new Person
+                {
+                    Id = 1,
+                    FirstName = "Yuri",
+                    LastName = "Alberto",
+                    Address = "Brasil",
+                    Gender = "Male"
+                },
+                new Person
+                {
+                     Id = 2,
+                    FirstName = "Lebron",
+                    LastName = "James",
+                    Address = "USA",
+                    Gender = "Male"
+                }
+            };
+            //Act
+            var personList = _converter.ParseList(entity);
+
+            //Assert
+            personList.Should().NotBeNull();
+            personList.Should().HaveCount(2);
+            personList[0].Should().BeEquivalentTo(new PersonDTO
+            {
+                Id = 1,
+                FirstName = "Yuri",
+                LastName = "Alberto",
+                Address = "Brasil",
+                Gender = "Male"
+            },
+            options => options.Excluding(personList => personList.BirthDay));
+            personList[1].Should().BeEquivalentTo(new PersonDTO
+            {
+                Id = 2,
+                FirstName = "Lebron",
+                LastName = "James",
+                Address = "USA",
+                Gender = "Male"
+            },
+            options => options.Excluding(personList => personList.BirthDay));
+           
+        }
+
+        [Fact]
+        public void Parse_NullListPersonShouldReturnNull()
+        {
+            List<Person> dto = null;
+            var listPerson = _converter.ParseList(dto);
+            listPerson.Should().BeNull();
+        }
+
     }
 }
