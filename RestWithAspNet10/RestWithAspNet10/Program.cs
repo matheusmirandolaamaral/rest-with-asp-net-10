@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddSerilogLogging();
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddContentNegotiation();
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddEvolveConfiguration(builder.Configuration,builder.Environment);
