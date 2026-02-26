@@ -24,6 +24,11 @@ builder.Services.AddScoped<IPersonService,PersonServiceImpl>();
 builder.Services.AddScoped<PersonServiceImplV2>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = true;
+});
 
 
 var app = builder.Build();

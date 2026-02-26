@@ -45,6 +45,9 @@ namespace RestWithAspNet10.Controllers.V1
         }
 
         [HttpPost]
+        [ProducesResponseType(200, Type = typeof(PersonDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Post([FromBody] PersonDTO person)
         {
             _logger.LogInformation("Creating new Person: {firstName}",person.FirstName );
@@ -59,6 +62,9 @@ namespace RestWithAspNet10.Controllers.V1
 
 
         [HttpPut]
+        [ProducesResponseType(200, Type = typeof(PersonDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Put([FromBody] PersonDTO person)
         {
             _logger.LogInformation("Updating persons with ID {id}", person.Id);
@@ -73,6 +79,9 @@ namespace RestWithAspNet10.Controllers.V1
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(204, Type = typeof(PersonDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Delete(long id)
         {
             _logger.LogInformation("Deleting persons with ID {id}", id);
