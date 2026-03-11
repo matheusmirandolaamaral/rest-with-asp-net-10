@@ -1,4 +1,5 @@
 ﻿using RestWithAspNet10.Configurations;
+using Serilog;
 using Testcontainers.MsSql;
 
 
@@ -15,8 +16,8 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Tools
             Container = new MsSqlBuilder().WithPassword("Test@1234").Build();
         }
         public async ValueTask InitializeAsync()
-        {
-            await Container.StartAsync();       
+        {      
+            await Container.StartAsync();            
             EvolveConfig.ExecuteMigrations(ConnectionString);
         }
 
