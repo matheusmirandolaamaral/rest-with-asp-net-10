@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Service;
 
@@ -7,6 +8,7 @@ namespace RestWithAspNet10.Controllers.V1
 {
     [ApiController]
     [Route("api/[controller]/v1")]
+    //[EnableCors("LocalPolicy")]
     public class PersonController : ControllerBase
     {
         private readonly IPersonService _personService;
@@ -32,6 +34,7 @@ namespace RestWithAspNet10.Controllers.V1
         [ProducesResponseType(200, Type = typeof(PersonDTO))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
+        [EnableCors("LocalPolicy")]
         public IActionResult Get(long id)
         {
             _logger.LogInformation("Fetching persons with ID {id}", id);
@@ -48,6 +51,7 @@ namespace RestWithAspNet10.Controllers.V1
         [ProducesResponseType(200, Type = typeof(PersonDTO))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
+        [EnableCors("MultipleOriginPolicy")]
         public IActionResult Post([FromBody] PersonDTO person)
         {
             _logger.LogInformation("Creating new Person: {firstName}",person.FirstName );
