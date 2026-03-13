@@ -4,6 +4,8 @@
     {
         public static void AddCorsConfinguration(this IServiceCollection services, IConfiguration configuration)
         {
+            var origins = configuration.GetSection("Cors:Origins").Get<string[]>() ?? Array.Empty<string>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("LocalPolicy", policy =>
@@ -23,11 +25,19 @@
                            .AllowAnyHeader()
                            .AllowCredentials();
                 });
+                options.AddPolicy("DefaultPolicy", policy =>
+                {
+                    policy.WithOrigins(origins)
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                });
             });
         }
         public static IApplicationBuilder UseCorsConfiguration(this WebApplication app)
         {
-            app.UseCors();
+            //app.UseCors();
+            app.UseCors("DefaultPolicy");
             return app;
 
         }
