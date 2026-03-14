@@ -26,6 +26,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests
 
             //Assert
             response.EnsureSuccessStatusCode();
+
             var content = await response.Content.ReadAsStringAsync();
             content.Should().Contain("<title>ASP.NET 2026 REST API's from 0 to Azure and GCP with .NET 10, Docker e Kubernetes</title>");
             content.Should().Contain("script src");

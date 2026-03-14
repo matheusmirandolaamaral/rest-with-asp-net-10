@@ -16,13 +16,13 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Tools
         {
             Container = new MsSqlBuilder().WithPassword("Test@1234").WithPortBinding(0,1433).Build();
         }
-        public async ValueTask InitializeAsync()
+        public async Task InitializeAsync()
         {      
             await Container.StartAsync();            
             EvolveConfig.ExecuteMigrations(ConnectionString);
         }
 
-        public async ValueTask DisposeAsync()
+        public async Task DisposeAsync()
         {
             await Container.DisposeAsync();
         }
