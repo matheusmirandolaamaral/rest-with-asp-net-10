@@ -39,7 +39,7 @@ namespace RestWithAspNet10.Controllers.V1
         {
             _logger.LogInformation("Fetching persons with ID {id}", id);
             var person = _personService.FindById(id);
-            if(person == null)
+            if (person == null)
             {
                 _logger.LogWarning("Person with ID {id} not found", id);
                 return NotFound();
@@ -54,9 +54,9 @@ namespace RestWithAspNet10.Controllers.V1
         //[EnableCors("MultipleOriginPolicy")]
         public IActionResult Post([FromBody] PersonDTO person)
         {
-            _logger.LogInformation("Creating new Person: {firstName}",person.FirstName );
+            _logger.LogInformation("Creating new Person: {firstName}", person.FirstName);
             var createPerson = _personService.Create(person);
-            if(createPerson == null)
+            if (createPerson == null)
             {
                 _logger.LogError("Failed to create person with name {firstName}", person.FirstName);
                 return NotFound();
@@ -94,5 +94,23 @@ namespace RestWithAspNet10.Controllers.V1
             return NoContent();
         }
 
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType(200, Type = typeof(PersonDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public IActionResult Disable(long id)
+        {
+            _logger.LogInformation("Disabling persons with ID {id}", id);
+            var disablePerson = _personService.Disable(id);
+            if (disablePerson == null)
+            {
+                _logger.LogError("Failed to disable person with ID {id}", id);
+                return NotFound();
+            }
+            _logger.LogDebug("Person with ID {id} disabled sucessfully", id);
+            return Ok(disablePerson);
+
+        }
     }
 }
