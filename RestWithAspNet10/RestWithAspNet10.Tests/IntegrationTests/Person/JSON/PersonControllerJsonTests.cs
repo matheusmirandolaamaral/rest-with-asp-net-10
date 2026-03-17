@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Tests.IntegrationTests.Tools;
-using RestWithASPNET10.Tests.IntegrationTests.Tools;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -22,7 +21,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Person.JSON
                 BaseAddress = new Uri("http://localhost")
             });
         }
-       
+
 
         [Fact(DisplayName = "01 - Created Person")]
         [TestPriority(1)]
@@ -60,7 +59,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Person.JSON
         public async Task UpdatePerson_ShouldReturnUpdatedPerson()
         {
             // Arrange
-            _person.LastName = "Barcelona";
+            _person.LastName = "Yam";
 
             // Act
             var response = await _httpClient.PutAsJsonAsync("api/person/v1", _person);
@@ -72,18 +71,65 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Person.JSON
             updated.Should().NotBeNull();
             updated.Id.Should().BeGreaterThan(0);
             updated.FirstName.Should().Be("Lamine");
-            updated.LastName.Should().Be("Barcelona");
+            updated.LastName.Should().Be("Yam");
             updated.Address.Should().Be("Espanha");
             updated.Enabled.Should().BeTrue();
 
             _person = updated;
         }
 
+        [Fact(DisplayName = "03 - Disable Person By ID")]
+        [TestPriority(3)]
+        public async Task DisablePersonById_ShouldReturnDisabledPerson()
+        {
+            //Arrange and Act
+            var response = await _httpClient.PatchAsync($"api/person/v1/{_person.Id}", null);
 
-        
+            //Assert
+            response.EnsureSuccessStatusCode();
 
-        
+            var disabled = await response.Content.ReadFromJsonAsync<PersonDTO>();
 
-        
+            disabled.Should().NotBeNull();
+            disabled.Id.Should().BeGreaterThan(0);
+            disabled.FirstName.Should().Be("Lamine");
+            disabled.LastName.Should().Be("Yam");
+            disabled.Address.Should().Be("Espanha");
+            disabled.Enabled.Should().BeFalse();
+
+            _person = disabled;
+        }
+
+        [Fact(DisplayName = "04 - Get Person By ID")]
+        [TestPriority(4)]
+        public async Task GetPersonById_ShouldReturnPerson()
+        {
+            //Arrange and Act
+            var response = await _httpClient.GetAsync($"api/person/v1/{_person.Id}");
+            //Assert
+            response.EnsureSuccessStatusCode();
+
+            var found = await response.Content.ReadFromJsonAsync<PersonDTO>();
+
+            found.Should().NotBeNull();
+            found.Id.Should().Be(_person.Id);
+            found.FirstName.Should().Be("Lamine");
+            found.LastName.Should().Be("Yam");
+            found.Address.Should().Be("Espanha");
+            found.Enabled.Should().BeFalse();
+        }
+
+
+        [Fact(DisplayName = "05 - Delete Person By ID")]
+        [TestPriority(5)]
+        public async Task DeletePersonById_ShouldReturnNoContent()
+        {
+            //Arrange and Act
+            var response = await _httpClient.DeleteAsync($"api/person/v1/{_person.Id}");
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+
+
     }
- }
+}

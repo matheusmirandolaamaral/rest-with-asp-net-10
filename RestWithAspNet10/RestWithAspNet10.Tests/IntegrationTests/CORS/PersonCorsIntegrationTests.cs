@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Tests.IntegrationTests.Tools;
-using RestWithASPNET10.Tests.IntegrationTests.Tools;
 using System.Net;
 using System.Net.Http.Json;
 
