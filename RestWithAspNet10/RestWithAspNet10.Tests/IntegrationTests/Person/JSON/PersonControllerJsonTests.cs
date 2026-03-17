@@ -130,6 +130,31 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Person.JSON
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
 
+        [Fact(DisplayName = "06 - Find All People")]
+        [TestPriority(6)]
+        public async Task FindAllPerson_ShouldReturnListOfPerson()
+        {
+            //Arrange and Act
+            var response = await _httpClient.GetAsync("api/person/v1");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var list = await response.Content.ReadFromJsonAsync<List<PersonDTO>>();
+            list.Should().NotBeNull();
+            list.Count.Should().BeGreaterThan(0);
+
+            var first = list.First(p => p.FirstName == "Neymar");
+            first.LastName.Should().Be("Jr");
+            first.Address.Should().Be("Santos - Brasil");
+            first.Gender.Should().Be("Male");
+            first.Enabled.Should().BeTrue();
+
+            var second = list.First(p => p.FirstName == "Ronaldo");
+            second.LastName.Should().Be("Fenomeno");
+            second.Address.Should().Be("Brasil");
+            second.Gender.Should().Be("Male");
+            second.Enabled.Should().BeTrue();
+        }
+
 
     }
 }
