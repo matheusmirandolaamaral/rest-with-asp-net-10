@@ -18,7 +18,7 @@ namespace RestWithAspNet10.Hypermedia.Filters
         {
             if (context.Result is OkObjectResult objectResult)
             {
-                var enricher = _hypermediaFilterOptions.ContentResponseEnricherList.FirstOrDefault(option => option.CanEnrich(context))
+                var enricher = _hypermediaFilterOptions.ContentResponseEnricherList.FirstOrDefault(option => option.CanEnrich(context));
                     enricher?.Enrich(context).Wait();
             }
         }

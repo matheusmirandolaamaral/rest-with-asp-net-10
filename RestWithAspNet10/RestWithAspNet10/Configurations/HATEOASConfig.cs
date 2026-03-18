@@ -19,4 +19,5 @@ namespace RestWithAspNet10.Configurations
         {
             app.MapControllerRoute("Default", "{controller=values}/v1/{id?}");
         }
+    }
 }
