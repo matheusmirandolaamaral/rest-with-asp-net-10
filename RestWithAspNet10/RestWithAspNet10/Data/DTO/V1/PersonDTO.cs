@@ -1,7 +1,10 @@
-﻿namespace RestWithAspNet10.Data.DTO.V1
+﻿using RestWithAspNet10.Hypermedia;
+using RestWithAspNet10.Hypermedia.Abstract;
+
+namespace RestWithAspNet10.Data.DTO.V1
 {
    
-    public class PersonDTO
+    public class PersonDTO : ISupportsHypermedia
     {
 
         public long Id { get; set; }
@@ -14,5 +17,6 @@
         public string Gender { get; set; }
 
         public bool Enabled { get; set; }
+        public List<HypermediaLink> Links { get; set; } = [];
     }
 }
