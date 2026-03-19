@@ -58,7 +58,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             AssertLinkPattern(content, "delete");
         }
 
-        [Fact(DisplayName = "Update Person")]
+        [Fact(DisplayName = "02 - Update Person")]
         [TestPriority(2)]
         public async Task UpdatePerson_ShouldContainHateoasLinks()
         {
@@ -79,7 +79,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             AssertLinkPattern(content, "delete");
         }
 
-        [Fact(DisplayName = "Disable Person")]
+        [Fact(DisplayName = "03 - Disable Person")]
         [TestPriority(3)]
         public async Task DisablePersonById_ShouldContainHateoasLinks()
         {
@@ -98,7 +98,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             AssertLinkPattern(content, "delete");
         }
 
-        [Fact(DisplayName = "Get Person By Id")]
+        [Fact(DisplayName = "04 - Get Person By Id")]
         [TestPriority(4)]
         public async Task GetPersonById_ShouldContainHateoasLinks()
         {

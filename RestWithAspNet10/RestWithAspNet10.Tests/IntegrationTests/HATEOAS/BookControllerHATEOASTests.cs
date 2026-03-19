@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Model;
 using RestWithAspNet10.Tests.IntegrationTests.Tools;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 
@@ -76,7 +77,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             AssertLinkPattern(content, "delete");
         }
 
-        [Fact(DisplayName = "Get Book By Id")]
+        [Fact(DisplayName = "03 - Get Book By Id")]
         [TestPriority(3)]
         public async Task GetBookById_ShouldContainHateoasLinks()
         {
@@ -94,8 +95,8 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             AssertLinkPattern(content, "update");
             AssertLinkPattern(content, "delete");
         }
-        [Fact(DisplayName = "05 - Find All Books")]
-        [TestPriority(5)]
+        [Fact(DisplayName = "04 - Find All Books")]
+        [TestPriority(4)]
         public async Task FindAll_ShouldReturnLinksForEachBook()
         {
             // ---------------------------
@@ -154,6 +155,14 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
                          .Should().BeTrue($"Link '{rel}' must have a type for book {id}");
                 }
             }
+        }
+
+        [Fact(DisplayName = "05 - Delete Book By ID")]
+        [TestPriority(5)]
+        public async Task DeleteBookById_ShouldReturnNoContent()
+        {
+            var response = await _httpClient.DeleteAsync($"api/book/v1/{_book!.Id}");
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
     }
 }
