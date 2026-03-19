@@ -14,7 +14,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Tools
 
         public SqlServerFixture()
         {
-            Container = new MsSqlBuilder().WithPassword("Test@1234").WithPortBinding(0,1433).Build();
+            Container = new MsSqlBuilder().WithPassword("Test@1234").Build();
         }
         public async Task InitializeAsync()
         {      
