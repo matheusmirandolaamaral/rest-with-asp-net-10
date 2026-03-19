@@ -1,10 +1,9 @@
-﻿using RestWithAspNet10.Model.Base;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using RestWithAspNet10.Hypermedia;
+using RestWithAspNet10.Hypermedia.Abstract;
 
 namespace RestWithAspNet10.Data.DTO.V1
 {
-    public class BookDTO 
+    public class BookDTO : ISupportsHypermedia
     {
 
         public long Id { get; set; }
@@ -15,5 +14,6 @@ namespace RestWithAspNet10.Data.DTO.V1
         public decimal Price { get; set; }
 
         public DateTime LaunchDate { get; set; }
+        public List<HypermediaLink> Links { get; set; } = [];
     }
 }

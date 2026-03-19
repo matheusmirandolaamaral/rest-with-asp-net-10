@@ -1,0 +1,70 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Hypermedia.Constants;
+
+namespace RestWithAspNet10.Hypermedia.Enricher
+{
+    public class BookEnricher : ContentResponseEnricher<BookDTO>
+    {
+        protected override Task EnrichModel(BookDTO content, IUrlHelper urlHelper)
+        {
+            var request = urlHelper.ActionContext.HttpContext.Request;
+            var baseUrl = $"{request.Scheme}://" + $"{request.Host.ToUriComponent()}" + $"{request.PathBase.ToUriComponent()}/api/book/v1";
+
+            content.Links.AddRange(GenerateLinks(content.Id, baseUrl));
+            return Task.CompletedTask;
+        }
+
+        private IEnumerable<HypermediaLink> GenerateLinks(long id, string baseUrl)
+        {
+            //return new List<HypermediaLink>
+            return
+            [
+                // this new HypermediaLink is equal to new()
+                new()
+                {
+                    Rel = RelationType.COLLECTION,
+                    Href = $"{baseUrl}",
+                    Type = ResponseTypeFormat.DefaultGet,
+                    Action = HttpActionVerb.GET
+                },
+
+                new()
+                {
+                    Rel = RelationType.SELF,
+                    Href = $"{baseUrl}/{id}",
+                    Type = ResponseTypeFormat.DefaultGet,
+                    Action = HttpActionVerb.GET
+                },
+
+                new()
+                {
+                    Rel = RelationType.CREATE,
+                    Href = $"{baseUrl}",
+                    Type = ResponseTypeFormat.DefaultPost,
+                    Action = HttpActionVerb.POST
+                },
+
+                new()
+                {
+                    Rel = RelationType.UPDATE,
+                    Href = $"{baseUrl}",
+                    Type = ResponseTypeFormat.DefaultPut,
+                    Action = HttpActionVerb.PUT
+                },
+
+               
+                new()
+                {
+                    Rel = RelationType.DELETE,
+                    Href = $"{baseUrl}/{id}",
+                    Type = ResponseTypeFormat.DefaultDelete,
+                    Action = HttpActionVerb.DELETE
+                },
+
+
+
+            ];
+        }
+    }
+}
