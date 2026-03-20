@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using RestWithAspNet10.Hypermedia.Abstract;
+using RestWithAspNet10.Hypermedia.Utils;
 
 namespace RestWithAspNet10.Hypermedia
 {
@@ -9,7 +10,7 @@ namespace RestWithAspNet10.Hypermedia
     {
         public virtual bool CanEnrich(Type contentType)
         {
-            return contentType == typeof(T) || contentType == typeof(List<T>);
+            return contentType == typeof(T) || contentType == typeof(List<T>) || contentType == typeof(PagedSearchDTO<T>);
         }
 
         protected abstract Task EnrichModel(T content, IUrlHelper urlHelper);
@@ -37,6 +38,14 @@ namespace RestWithAspNet10.Hypermedia
                 {
                     foreach (var element in collection)
                     {
+                        await EnrichModel(element, urlHelper);
+                    }
+                }
+                else if (okObjectResult.Value is PagedSearchDTO<T> pagedSearch)
+                {
+                    foreach (var element in pagedSearch.List)
+                    {
+                        element.Links?.Clear();
                         await EnrichModel(element, urlHelper);
                     }
                 }
