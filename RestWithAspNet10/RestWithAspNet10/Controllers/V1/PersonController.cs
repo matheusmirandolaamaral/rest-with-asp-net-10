@@ -30,6 +30,20 @@ namespace RestWithAspNet10.Controllers.V1
             return Ok(_personService.FindAll());
         }
 
+
+
+        [HttpGet("find-by-name")]
+        [ProducesResponseType(200, Type = typeof(List<PersonDTO>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public IActionResult GetByName([FromQuery] string? firstName, [FromQuery] string? lastName)
+        {
+            _logger.LogInformation("Fetching persons with name {firstName} {lastName}", firstName, lastName);
+            return Ok(_personService.FindByName(firstName, lastName));
+        }
+
+
+
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(PersonDTO))]
         [ProducesResponseType(400)]
@@ -46,6 +60,8 @@ namespace RestWithAspNet10.Controllers.V1
             }
             return Ok(person);
         }
+
+
 
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(PersonDTO))]
@@ -65,6 +81,8 @@ namespace RestWithAspNet10.Controllers.V1
         }
 
 
+
+
         [HttpPut]
         [ProducesResponseType(200, Type = typeof(PersonDTO))]
         [ProducesResponseType(400)]
@@ -82,6 +100,8 @@ namespace RestWithAspNet10.Controllers.V1
             return Ok(updatePerson);
         }
 
+
+
         [HttpDelete("{id}")]
         [ProducesResponseType(204, Type = typeof(PersonDTO))]
         [ProducesResponseType(400)]
@@ -93,6 +113,8 @@ namespace RestWithAspNet10.Controllers.V1
             _logger.LogDebug("Person with ID {id} deleted sucessfully", id);
             return NoContent();
         }
+
+
 
 
         [HttpPatch("{id}")]

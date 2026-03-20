@@ -1,5 +1,4 @@
 ﻿using RestWithAspNet10.Data.DTO.V1;
-using RestWithAspNet10.Model;
 
 namespace RestWithAspNet10.Service
 {
@@ -11,5 +10,6 @@ namespace RestWithAspNet10.Service
         PersonDTO? Update(PersonDTO person);
         void Delete(long id);
         PersonDTO Disable(long id);
+        List<PersonDTO> FindByName(string firstName, string lastName);
     }
 }

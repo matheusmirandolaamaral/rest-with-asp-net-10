@@ -1,8 +1,6 @@
 ﻿using Mapster;
-using RestWithAspNet10.Data.Converter.Impl;
 using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Model;
-using RestWithAspNet10.Model.Context;
 using RestWithAspNet10.Repository;
 
 namespace RestWithAspNet10.Service.Impl
@@ -52,6 +50,9 @@ namespace RestWithAspNet10.Service.Impl
             return entity.Adapt<PersonDTO>();
         }
 
-
+        public List<PersonDTO> FindByName(string firstName, string lastName)
+        {
+            return _repository.FindByName(firstName, lastName).Adapt<List<PersonDTO>>();
+        }
     }
 }
