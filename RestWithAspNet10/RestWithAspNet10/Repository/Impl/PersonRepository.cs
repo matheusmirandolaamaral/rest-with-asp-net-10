@@ -1,5 +1,6 @@
 ﻿using RestWithAspNet10.Model;
 using RestWithAspNet10.Model.Context;
+using RestWithAspNet10.Repository.QueryBuilders;
 
 namespace RestWithAspNet10.Repository.Impl
 {
@@ -8,7 +9,7 @@ namespace RestWithAspNet10.Repository.Impl
         public Person? Disable(long id)
         {
             var person = _context.Persons.Find(id);
-            if(person == null) return null;
+            if (person == null) return null;
             person.Enabled = false;
             _context.SaveChanges();
             return person;
@@ -17,14 +18,34 @@ namespace RestWithAspNet10.Repository.Impl
         public List<Person> FindByName(string firstName, string lastName)
         {
             var query = _context.Persons.AsQueryable();
-            if(!string.IsNullOrWhiteSpace(firstName))
+            if (!string.IsNullOrWhiteSpace(firstName))
                 query = query.Where(p => p.FirstName.Contains(firstName));
 
-            if(!string.IsNullOrWhiteSpace(lastName))
+            if (!string.IsNullOrWhiteSpace(lastName))
                 query = query.Where(p => p.LastName.Contains(lastName));
 
-           // return query.ToList();
+            // return query.ToList();
             return [.. query]; // C# 14.0 collection expression syntax, equivalent to query.ToList()
+        }
+
+        public PagedSearch<Person> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
+        {
+            var queryBuilder = new PersonQueryBuilder();
+
+            var (query, countQuery, sort, size, offset) = queryBuilder.BuildQueries(name, sortDirection, pageSize, page);
+
+            var persons = base.FindWithPagedSearch(query);
+            var totalResults = base.GetCount(countQuery);
+
+            return new PagedSearch<Person>
+            {
+                CurrentPage = page,
+                List = persons,
+                PageSize = size,
+                SortDirection = sort,
+                TotalResults = totalResults
+            };
+
         }
     }
 }
