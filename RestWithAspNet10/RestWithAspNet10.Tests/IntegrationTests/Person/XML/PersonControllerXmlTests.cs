@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Hypermedia.Utils;
 using RestWithAspNet10.Tests.IntegrationTests.Tools;
 using System.Net;
 using System.Net.Http.Headers;
@@ -140,26 +141,37 @@ namespace RestWithAspNet10.Tests.IntegrationTests.Person.XML
         public async Task FindAllPerson_ShouldReturnListOfPerson()
         {
             //Arrange and Act
-            var response = await _httpClient.GetAsync("api/person/v1");
+            var response = await _httpClient.GetAsync("api/person/v1/asc/10/1");
+                                    // <-- sortDirection=asc, pageSize=10, page=1;
             //Assert
             response.EnsureSuccessStatusCode();
 
-            var list = await XmlHelper.ReadFromXmlAsync<List<PersonDTO>>(response);
+            var page = await XmlHelper.ReadFromXmlAsync<PagedSearchDTO<PersonDTO>>(response);
+            page.Should().NotBeNull();
+            page.CurrentPage.Should().Be(1);
+
+            var list = page?.List;
+            
 
             list.Should().NotBeNull();
             list.Count.Should().BeGreaterThan(0);
 
-            var first = list.First(p => p.FirstName == "Neymar");
-            first.LastName.Should().Be("Jr");
-            first.Address.Should().Be("Santos - Brasil");
+            var first = list.First(p => p.FirstName == "Abbie");
+            first.LastName.Should().Be("Bassford");
+            first.Address.Should().Be("PO Box 88145");
+            first.Enabled.Should().BeFalse();
             first.Gender.Should().Be("Male");
-            first.Enabled.Should().BeTrue();
 
-            var second = list.First(p => p.FirstName == "Ronaldo");
-            second.LastName.Should().Be("Fenomeno");
-            second.Address.Should().Be("Brasil");
-            second.Gender.Should().Be("Male");
-            second.Enabled.Should().BeTrue();
+            var third = list.First(p => p.FirstName == "Abner");
+            third.LastName.Should().Be("Castilla");
+            third.Address.Should().Be("8th Floor");
+            third.Enabled.Should().BeFalse();
+            third.Gender.Should().Be("Male");
+
+            page.CurrentPage.Should().BeGreaterThan(0);
+            page.TotalResults.Should().BeGreaterThan(0);
+            page.PageSize.Should().BeGreaterThan(0);
+            page.SortDirection.Should().NotBeNull();
         }
     }
 }

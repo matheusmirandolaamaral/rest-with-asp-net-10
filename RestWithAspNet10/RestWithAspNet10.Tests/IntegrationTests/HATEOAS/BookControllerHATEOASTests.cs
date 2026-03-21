@@ -95,7 +95,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             AssertLinkPattern(content, "update");
             AssertLinkPattern(content, "delete");
         }
-        [Fact(DisplayName = "04 - Find All Books")]
+        [Fact(DisplayName = "04 - Find Paged Books with HATEOAS")]
         [TestPriority(4)]
         public async Task FindAll_ShouldReturnLinksForEachBook()
         {
