@@ -1,4 +1,5 @@
 ﻿using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Hypermedia.Utils;
 
 namespace RestWithAspNet10.Service
 {
@@ -11,5 +12,6 @@ namespace RestWithAspNet10.Service
         void Delete(long id);
         PersonDTO Disable(long id);
         List<PersonDTO> FindByName(string firstName, string lastName);
+        PagedSearchDTO<PersonDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page);
     }
 }

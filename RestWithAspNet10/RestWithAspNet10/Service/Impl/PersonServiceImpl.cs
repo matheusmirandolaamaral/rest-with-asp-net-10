@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Hypermedia.Utils;
 using RestWithAspNet10.Model;
 using RestWithAspNet10.Repository;
 
@@ -53,6 +54,44 @@ namespace RestWithAspNet10.Service.Impl
         public List<PersonDTO> FindByName(string firstName, string lastName)
         {
             return _repository.FindByName(firstName, lastName).Adapt<List<PersonDTO>>();
+        }
+
+        public PagedSearchDTO<PersonDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
+        {
+            var (query, countQuery, sort, size, offset) = BuildQueries(name, sortDirection, pageSize, page);
+
+            var persons = _repository.FindWithPagedSearch(query);
+            var totalResults = _repository.GetCount(countQuery);
+
+            return new PagedSearchDTO<PersonDTO>
+            {
+                CurrentPage = page,
+                List = persons.Adapt<List<PersonDTO>>(),
+                PageSize = size,
+                SortDirection = sort,
+                TotalResults = totalResults
+            };
+        }
+
+        private (string query, string countQuery, string sort, int size, int offset) BuildQueries(string name, string sortDirection, int pageSize, int page)
+        {
+            page = Math.Max(1, page);
+            
+             var offset = (page - 1) * pageSize;
+            var size = pageSize < 1 ? 1 : pageSize;
+
+            var sort = !string.IsNullOrEmpty(sortDirection) && sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ? "desc" : "asc";
+
+            var whereClause = $"FROM person p WHERE 1 = 1 ";
+            if(!string.IsNullOrEmpty(name))
+                whereClause += $"AND (p.first_name LIKE '%{name}%') ";
+
+            var query = $@"SELECT * {whereClause}
+                ORDER BY p.first_name {sort}
+                OFFSET {offset} ROWS FETCH NEXT {size} ROWS ONLY";
+
+            var countQuery = $"SELECT COUNT(*) {whereClause}";
+            return (query, countQuery, sort, size, offset);
         }
     }
 }

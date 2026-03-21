@@ -1,4 +1,5 @@
 ﻿using RestWithAspNet10.Hypermedia.Abstract;
+using System.Xml.Serialization;
 
 namespace RestWithAspNet10.Hypermedia.Utils
 {
@@ -9,6 +10,8 @@ namespace RestWithAspNet10.Hypermedia.Utils
         public int TotalResults { get; set; }
         public string SortFields { get; set; }
         public string SortDirection { get; set; } = "asc";
+
+        [XmlIgnore]
         public Dictionary<string, object> Filters { get; set; } = [];
         public List<T> List { get; set; } = [];
 
