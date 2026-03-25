@@ -7,8 +7,8 @@ namespace RestWithAspNet10.Service.Impl
 {
     public class BookServiceImpl : IBookService
     {
-        private IRepository<Book> _repository;
-        public BookServiceImpl(IRepository<Book> repository)
+        private IBookRepository _repository;
+        public BookServiceImpl(IBookRepository repository)
         {
             _repository = repository;
         }
@@ -43,5 +43,15 @@ namespace RestWithAspNet10.Service.Impl
             _repository.Delete(id);
         }
 
+        public List<BookDTO> FindByTitle(string title, string author)
+        {
+            return _repository.FindByTitle(title, author).Adapt<List<BookDTO>>();
+        }
+
+        public PagedSearch<BookDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
+        {
+            var result = _repository.FindWithPagedSearch(name, sortDirection, pageSize, page);
+            return result.Adapt<PagedSearch<BookDTO>>();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Hypermedia.Utils;
 using RestWithAspNet10.Service;
 
 
@@ -17,15 +18,30 @@ namespace RestWithAspNet10.Controllers.V1
             _logger = logger;
         }
 
-        [HttpGet]
+
+        [HttpGet("{sortDirection}/{pageSize}/{page}")]
+        [ProducesResponseType(200, Type = typeof(PagedSearchDTO<BookDTO>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public IActionResult Get([FromQuery] string? name, string sortDirection, int pageSize, int page)
+        {
+            _logger.LogInformation("Fetching persons with paged search: {name}, {sortDirection}, {pageSize}, {page}", name, sortDirection, pageSize, page);
+            return Ok(_bookService.FindWithPagedSearch(name, sortDirection, pageSize, page));
+        }
+
+
+        [HttpGet("find-by-title")]
         [ProducesResponseType(200, Type = typeof(List<BookDTO>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public IActionResult Get()
+        public IActionResult GetByTitle([FromQuery] string? title, [FromQuery]string? author)
         {
-            _logger.LogInformation("Fetching all books");
-            return Ok(_bookService.FindAll());
+            _logger.LogInformation("Fetching persons with name {title} {author}", title, author);
+            return Ok(_bookService.FindByTitle(title, author));
         }
+
+
+
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(BookDTO))]
         [ProducesResponseType(400)]
@@ -41,6 +57,7 @@ namespace RestWithAspNet10.Controllers.V1
             }
             return Ok(book);
         }
+
 
 
         [HttpPost]
@@ -61,6 +78,8 @@ namespace RestWithAspNet10.Controllers.V1
             return Ok(books);
         }
 
+
+
         [HttpPut]
         [ProducesResponseType(200, Type = typeof(BookDTO))]
         [ProducesResponseType(400)]
@@ -76,6 +95,8 @@ namespace RestWithAspNet10.Controllers.V1
             }
             return Ok(updatebook);
         }
+
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204, Type = typeof(BookDTO))]
