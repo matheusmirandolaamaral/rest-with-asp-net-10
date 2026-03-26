@@ -1,5 +1,5 @@
 ﻿using RestWithAspNet10.Data.DTO.V1;
-using RestWithAspNet10.Model;
+using RestWithAspNet10.Hypermedia.Utils;
 
 namespace RestWithAspNet10.Service
 {
@@ -11,6 +11,6 @@ namespace RestWithAspNet10.Service
         BookDTO? Update(BookDTO book);
         void Delete(long id);
         List<BookDTO> FindByTitle(string title, string author);
-        PagedSearch<BookDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page);
+        PagedSearchDTO<BookDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page);
     }
 }

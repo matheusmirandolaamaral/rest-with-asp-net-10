@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Hypermedia.Utils;
 using RestWithAspNet10.Model;
 using RestWithAspNet10.Repository;
 
@@ -48,10 +49,10 @@ namespace RestWithAspNet10.Service.Impl
             return _repository.FindByTitle(title, author).Adapt<List<BookDTO>>();
         }
 
-        public PagedSearch<BookDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
+        public PagedSearchDTO<BookDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
         {
             var result = _repository.FindWithPagedSearch(name, sortDirection, pageSize, page);
-            return result.Adapt<PagedSearch<BookDTO>>();
+            return result.Adapt<PagedSearchDTO<BookDTO>>();
         }
     }
 }

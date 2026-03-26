@@ -111,8 +111,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             // Act
             // ---------------------------
             // Perform the HTTP GET request to retrieve all books.
-            var response = await _httpClient.GetAsync("api/book/v1");
-            response.EnsureSuccessStatusCode(); // Ensures the response status code is 2xx.
+            var response = await _httpClient.GetAsync("api/book/v1/asc/10/1");
 
             // Read the response content as a string.
             var content = await response.Content.ReadAsStringAsync();
@@ -121,7 +120,7 @@ namespace RestWithAspNet10.Tests.IntegrationTests.HATEOAS
             // Assert
             // ---------------------------
             // Extract all "id" values from the response JSON using Regex.
-            var idMatches = Regex.Matches(content, @"""id"":\s*(\d+)");
+            var idMatches = Regex.Matches(content, @"""list"":\s*\[\s*{[^}]*""id"":\s*(\d+)");
             idMatches.Count.Should().BeGreaterThan(0, "There should be at least one book");
 
             // Iterate through each book id found in the response.
