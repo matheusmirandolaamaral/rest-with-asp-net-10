@@ -31,8 +31,12 @@ builder.Services.AddScoped<IBookService, BookServiceImpl>();
 builder.Services.AddScoped<IPersonService,PersonServiceImpl>();
 builder.Services.AddScoped<PersonServiceImplV2>();
 
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IFileServices, FileServiceImpl>();
+
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 
