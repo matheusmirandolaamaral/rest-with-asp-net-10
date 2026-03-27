@@ -26,7 +26,7 @@ namespace RestWithAspNet10.Controllers.V1
         {
 
             var buffer = _fileServices.GetFile(fileName);
-            if (buffer != null || buffer.Length == 0)
+            if (buffer == null || buffer.Length == 0)
                 return NoContent();
 
             var contentType = $"application/{Path.GetExtension(fileName).TrimStart('.')}";
