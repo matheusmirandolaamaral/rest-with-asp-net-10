@@ -27,7 +27,7 @@ namespace RestWithAspNet10.Controllers.V1
         [ProducesResponseType(401)]
         public IActionResult Get([FromQuery] string? name, string sortDirection, int pageSize, int page)
         {
-            _logger.LogInformation( "Fetching persons with paged search: {name}, {sortDirection}, {pageSize}, {page}", name, sortDirection, pageSize, page);
+            _logger.LogInformation("Fetching persons with paged search: {name}, {sortDirection}, {pageSize}, {page}", name, sortDirection, pageSize, page);
             return Ok(_personService.FindWithPagedSearch(name, sortDirection, pageSize, page));
         }
 
@@ -135,5 +135,32 @@ namespace RestWithAspNet10.Controllers.V1
             return Ok(disablePerson);
 
         }
+
+        [HttpPost("massCreation")]
+        [ProducesResponseType(200, Type = typeof(List<PersonDTO>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> MassCreation([FromForm] FileUploadDTO input)
+        {
+            if (input.File == null || input.File.Length == 0)
+            {
+                _logger.LogWarning("No file uploaded for mass creation");
+                return BadRequest("File is required");
+            }
+            _logger.LogInformation("Starting mass creation of persons from file: {fileName}", input.File.FileName);
+
+            var people = await _personService.MassCreatingAsync(input.File);
+
+            if (people == null)
+            {
+                _logger.LogError("Mass creation failed for file: {fileName}", input.File.FileName);
+                return NoContent();
+            }
+
+            _logger.LogInformation("Mass creation completed successfully with {count} records", people.Count);
+
+            return Ok(people);
+        }
+
     }
 }

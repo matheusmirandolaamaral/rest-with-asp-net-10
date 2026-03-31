@@ -1,4 +1,6 @@
 using RestWithAspNet10.Configurations;
+using RestWithAspNet10.Files.Importers.Factory;
+using RestWithAspNet10.Files.Importers.Impl;
 using RestWithAspNet10.Hypermedia.Filters;
 using RestWithAspNet10.Repository;
 using RestWithAspNet10.Repository.Impl;
@@ -30,6 +32,10 @@ builder.Services.AddEvolveConfiguration(builder.Configuration,builder.Environmen
 builder.Services.AddScoped<IBookService, BookServiceImpl>();
 builder.Services.AddScoped<IPersonService,PersonServiceImpl>();
 builder.Services.AddScoped<PersonServiceImplV2>();
+
+builder.Services.AddScoped<CsvImporter>();
+builder.Services.AddScoped<XlsxImporter>();
+builder.Services.AddScoped<FileImporterFactory>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IFileServices, FileServiceImpl>();

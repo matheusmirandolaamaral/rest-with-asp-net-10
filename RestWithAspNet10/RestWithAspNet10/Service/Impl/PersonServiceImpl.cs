@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Files.Importers.Factory;
 using RestWithAspNet10.Hypermedia.Utils;
 using RestWithAspNet10.Model;
 using RestWithAspNet10.Repository;
@@ -9,11 +10,14 @@ namespace RestWithAspNet10.Service.Impl
     public class PersonServiceImpl : IPersonService
     {
         private IPersonRepository _repository;
+        private readonly FileImporterFactory _fileImporterFactory;
+        private readonly ILogger<PersonServiceImpl> _logger;
 
-        public PersonServiceImpl(IPersonRepository repository)
+        public PersonServiceImpl(IPersonRepository repository, FileImporterFactory fileImporterFactory, ILogger<PersonServiceImpl> logger)
         {
             _repository = repository;
-
+            _fileImporterFactory = fileImporterFactory;
+            _logger = logger;
         }
 
 
@@ -64,7 +68,34 @@ namespace RestWithAspNet10.Service.Impl
             return result.Adapt<PagedSearchDTO<PersonDTO>>();
         }
 
+        public async Task<List<PersonDTO>> MassCreatingAsync(IFormFile file)
+        {
+            if(file == null || file.Length == 0)
+            {
+                _logger.LogError("File is empty or null.");
+                throw new ArgumentException("File is empty or null.");
+            }
 
+            using var stream = file.OpenReadStream();
+            var fileName = file.FileName;
+
+            try { 
+                var importer = _fileImporterFactory.GetImporter(fileName);
+                var persons = await importer.ImportFileAsync(stream);
+
+                var entities = persons.Select(dto => _repository.Create(dto.Adapt<Person>())).ToList();
+
+                return entities.Adapt<List<PersonDTO>>();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during mass creation from file: {FileName}", file.FileName);
+                throw;
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }
 
