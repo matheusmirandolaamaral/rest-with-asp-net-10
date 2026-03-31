@@ -1,5 +1,7 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Files.Exporters.Factory;
 using RestWithAspNet10.Files.Importers.Factory;
 using RestWithAspNet10.Hypermedia.Utils;
 using RestWithAspNet10.Model;
@@ -11,12 +13,14 @@ namespace RestWithAspNet10.Service.Impl
     {
         private IPersonRepository _repository;
         private readonly FileImporterFactory _fileImporterFactory;
+        private readonly FileExporterFactory _fileExporterFactory;
         private readonly ILogger<PersonServiceImpl> _logger;
 
-        public PersonServiceImpl(IPersonRepository repository, FileImporterFactory fileImporterFactory, ILogger<PersonServiceImpl> logger)
+        public PersonServiceImpl(IPersonRepository repository, FileImporterFactory fileImporterFactory,FileExporterFactory fileExporterFactory, ILogger<PersonServiceImpl> logger)
         {
             _repository = repository;
             _fileImporterFactory = fileImporterFactory;
+            _fileExporterFactory = fileExporterFactory;
             _logger = logger;
         }
 
@@ -95,6 +99,24 @@ namespace RestWithAspNet10.Service.Impl
             }
 
             throw new NotImplementedException();
+        }
+
+        public FileContentResult ExportPage(int page, int pageSize, string sortDirection, string acceptHeader, string name)
+        {
+            _logger.LogInformation("Exporting page {Page} with page size {PageSize} and sort direction {SortDirection} for name filter {Name}", page, pageSize, sortDirection, name);
+            var content = FindWithPagedSearch(name, sortDirection, pageSize, page);
+
+            try
+            {
+                var exporter = _fileExporterFactory.GetExporter(acceptHeader);
+                var people = content.List.Adapt<List<PersonDTO>>();
+                return exporter.ExportFile(people);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during file export for page {Page} with page size {PageSize} and sort direction {SortDirection} for name filter {Name}", page, pageSize, sortDirection, name);
+                throw;
+            }
         }
     }
 }

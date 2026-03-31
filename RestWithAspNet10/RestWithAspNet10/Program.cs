@@ -1,4 +1,6 @@
 using RestWithAspNet10.Configurations;
+using RestWithAspNet10.Files.Exporters.Factory;
+using RestWithAspNet10.Files.Exporters.Impl;
 using RestWithAspNet10.Files.Importers.Factory;
 using RestWithAspNet10.Files.Importers.Impl;
 using RestWithAspNet10.Hypermedia.Filters;
@@ -36,6 +38,10 @@ builder.Services.AddScoped<PersonServiceImplV2>();
 builder.Services.AddScoped<CsvImporter>();
 builder.Services.AddScoped<XlsxImporter>();
 builder.Services.AddScoped<FileImporterFactory>();
+
+builder.Services.AddScoped<CsvExporter>();
+builder.Services.AddScoped<XlsxExporter>();
+builder.Services.AddScoped<FileExporterFactory>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IFileServices, FileServiceImpl>();

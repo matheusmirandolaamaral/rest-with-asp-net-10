@@ -22,10 +22,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Files\Exporters\Contract\" />
-    <Folder Include="Files\Exporters\Factory\" />
-    <Folder Include="Files\Exporters\Impl\" />
-  </ItemGroup>
-
 </Project>

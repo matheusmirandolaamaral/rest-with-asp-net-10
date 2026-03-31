@@ -1,6 +1,7 @@
 ﻿//using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Files.Exporters.Factory;
 using RestWithAspNet10.Hypermedia.Utils;
 using RestWithAspNet10.Service;
 
@@ -162,5 +163,39 @@ namespace RestWithAspNet10.Controllers.V1
             return Ok(people);
         }
 
+        [HttpGet("exportPage/{sortDirection}/{pageSize}/{page}")]
+        [ProducesResponseType(200, Type = typeof(FileContentResult))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(415)]
+        [Produces(MediaTypes.ApplicationXlsx, MediaTypes.ApplicationCsv)]
+        public IActionResult ExportPage(string sortDirection, int pageSize, int page, [FromQuery] string? name = "")
+        {
+            var acceptHeader = Request.Headers["Accept"].ToString();
+
+            if (string.IsNullOrEmpty(acceptHeader))
+            {
+                return BadRequest("Accept header is required");
+            }
+
+            _logger.LogInformation("Exporting page of persons with sortDirection: {sortDirection}, pageSize: {pageSize}, page: {page}, name filter: {name}", sortDirection, pageSize, page, name);
+
+            try
+            {
+                var fileResult = _personService.ExportPage(page, pageSize, sortDirection, acceptHeader, name);
+                return fileResult;
+            }
+            catch (NotSupportedException ex)
+            {
+                _logger.LogWarning(ex, "Unsupported export format requested: {AcceptHeader}", acceptHeader);
+                return StatusCode(StatusCodes.Status415UnsupportedMediaType, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while exporting data");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+
+            }
+        }
     }
 }
