@@ -4,6 +4,7 @@ using RestWithAspNet10.Files.Exporters.Impl;
 using RestWithAspNet10.Files.Importers.Factory;
 using RestWithAspNet10.Files.Importers.Impl;
 using RestWithAspNet10.Hypermedia.Filters;
+using RestWithAspNet10.Mail;
 using RestWithAspNet10.Repository;
 using RestWithAspNet10.Repository.Impl;
 using RestWithAspNet10.Service;
@@ -36,6 +37,9 @@ builder.Services.AddEvolveConfiguration(builder.Configuration,builder.Environmen
 builder.Services.AddScoped<IBookService, BookServiceImpl>();
 builder.Services.AddScoped<IPersonService,PersonServiceImpl>();
 builder.Services.AddScoped<PersonServiceImplV2>();
+
+builder.Services.AddScoped<IEmailService, EmailServiceImpl>();
+builder.Services.AddScoped<EmailSender>();
 
 builder.Services.AddScoped<CsvImporter>();
 builder.Services.AddScoped<XlsxImporter>();
