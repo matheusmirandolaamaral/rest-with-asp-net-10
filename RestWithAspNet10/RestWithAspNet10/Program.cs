@@ -1,3 +1,5 @@
+using RestWithAspNet10.Auth.Contract;
+using RestWithAspNet10.Auth.Tools;
 using RestWithAspNet10.Configurations;
 using RestWithAspNet10.Files.Exporters.Factory;
 using RestWithAspNet10.Files.Exporters.Impl;
@@ -33,6 +35,7 @@ builder.Services.AddEmailConfiguration(builder.Configuration);
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddEvolveConfiguration(builder.Configuration,builder.Environment);
+builder.Services.AddAuthConfiguration(builder.Configuration);
 
 builder.Services.AddScoped<IBookService, BookServiceImpl>();
 builder.Services.AddScoped<IPersonService,PersonServiceImpl>();
@@ -51,9 +54,11 @@ builder.Services.AddScoped<FileExporterFactory>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IFileServices, FileServiceImpl>();
+builder.Services.AddScoped<IPasswordHasher, Sha256PasswordHasher>();
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
@@ -64,8 +69,11 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseRouting();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 //app.UseCorsConfiguration();
 app.UseCorsConfiguration(builder.Configuration);
 
