@@ -1,4 +1,5 @@
 ﻿//using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestWithAspNet10.Data.DTO.V1;
 using RestWithAspNet10.Files.Exporters.Factory;
@@ -10,6 +11,7 @@ namespace RestWithAspNet10.Controllers.V1
 {
     [ApiController]
     [Route("api/[controller]/v1")]
+    [Authorize("Bearer")]
     //[EnableCors("LocalPolicy")]
     public class PersonController : ControllerBase
     {
