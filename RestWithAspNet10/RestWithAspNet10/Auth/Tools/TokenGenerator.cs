@@ -3,6 +3,7 @@ using RestWithAspNet10.Auth.Config;
 using RestWithAspNet10.Auth.Contract;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace RestWithAspNet10.Auth.Tools
@@ -34,7 +35,13 @@ namespace RestWithAspNet10.Auth.Tools
 
         public string GenerateRefreshToken()
         {
-            throw new NotImplementedException();
+            var randomNumber = new byte[32];
+
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
