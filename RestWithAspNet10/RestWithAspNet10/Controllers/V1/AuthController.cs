@@ -1,0 +1,45 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using RestWithAspNet10.Data.DTO.V1;
+using RestWithAspNet10.Service;
+
+namespace RestWithAspNet10.Controllers.V1
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthController : ControllerBase
+    {
+        private readonly ILoginService _loginService;
+        private readonly IUserAuthService _userAuthService;
+        private readonly ILogger<AuthController> _logger;
+
+        public AuthController(ILoginService loginService, IUserAuthService userAuthService, ILogger<AuthController> logger)
+        {
+            _loginService = loginService;
+            _userAuthService = userAuthService;
+            _logger = logger;
+        }
+
+        [HttpPost("signin")]
+        [AllowAnonymous]
+        public IActionResult SignIn([FromBody] UserDTO user)
+        {
+            _logger.LogInformation("Attempting to sign in user: {username}", user.Username);
+
+            if(user == null || string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
+            {
+                _logger.LogWarning("Sign in failed: Missing username or password");
+                return BadRequest("Username and password are required.");
+            }
+
+            var token = _loginService.ValidateCredentials(user);
+            if(token == null)
+            {
+                return Unauthorized();
+            }
+
+            _logger.LogInformation("User {username} signed in successfully", user.Username);
+            return Ok(token);
+        }
+    }
+}
