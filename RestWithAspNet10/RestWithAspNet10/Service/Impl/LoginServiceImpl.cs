@@ -38,7 +38,13 @@ namespace RestWithAspNet10.Service.Impl
 
         public TokenDTO? ValidateCredentials(TokenDTO token)
         {
-            throw new NotImplementedException();
+            var principal = _tokenService.GetPrincipalFromExpiredToken(token.AccessToken);
+
+            var username = principal.Identity?.Name;
+            var user = _userAuthService.FindByUsername(username);
+
+            if(user == null || user.RefreshToken != token.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now) return null;
+            return GenerateToken(user, principal.Claims);
         }
         public AccountCredentialsDTO Create(AccountCredentialsDTO user)
         {
