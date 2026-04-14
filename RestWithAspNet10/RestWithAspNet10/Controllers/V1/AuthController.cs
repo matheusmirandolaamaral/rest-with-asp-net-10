@@ -41,5 +41,18 @@ namespace RestWithAspNet10.Controllers.V1
             _logger.LogInformation("User {username} signed in successfully", user.Username);
             return Ok(token);
         }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public IActionResult Refresh([FromBody] TokenDTO tokenDto)
+        {
+            if (tokenDto == null) return BadRequest("Invalid client request");
+
+            var token = _loginService.ValidateCredentials(tokenDto);
+
+            if (token == null) return Unauthorized();
+
+            return Ok(token);
+        }
     }
 }
