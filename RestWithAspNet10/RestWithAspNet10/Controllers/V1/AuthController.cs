@@ -26,14 +26,14 @@ namespace RestWithAspNet10.Controllers.V1
         {
             _logger.LogInformation("Attempting to sign in user: {username}", user.Username);
 
-            if(user == null || string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
+            if (user == null || string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
             {
                 _logger.LogWarning("Sign in failed: Missing username or password");
                 return BadRequest("Username and password are required.");
             }
 
             var token = _loginService.ValidateCredentials(user);
-            if(token == null)
+            if (token == null)
             {
                 return Unauthorized();
             }
@@ -63,9 +63,19 @@ namespace RestWithAspNet10.Controllers.V1
             var username = User.Identity?.Name;
             if (string.IsNullOrWhiteSpace(username)) return BadRequest("Invalid client request");
 
-            var result = _userAuthService.RevokeToken(username);
+            var result = _loginService.RevokeToken(username);
             if (!result) return BadRequest("Invalid client request");
             return NoContent();
+        }
+
+        [HttpPost("create")]
+        [AllowAnonymous]
+        public IActionResult Create([FromBody] AccountCredentialsDTO user)
+        {
+            if (user == null) return BadRequest("Invalid client request");
+
+            var result = _loginService.Create(user);
+            return Ok(result);
         }
     }
 }

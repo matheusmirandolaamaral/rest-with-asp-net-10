@@ -46,14 +46,20 @@ namespace RestWithAspNet10.Service.Impl
             if(user == null || user.RefreshToken != token.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now) return null;
             return GenerateToken(user, principal.Claims);
         }
-        public AccountCredentialsDTO Create(AccountCredentialsDTO user)
+        public AccountCredentialsDTO Create(AccountCredentialsDTO dto)
         {
-            throw new NotImplementedException();
+            var user = _userAuthService.Create(dto);
+            return new AccountCredentialsDTO
+            {
+                Username = user.Username,
+                Fullname = user.FullName,
+                Password = "*******"
+            };
         }
 
         public bool RevokeToken(string username)
         {
-            throw new NotImplementedException();
+            return _userAuthService.RevokeToken(username);
         }
         private TokenDTO GenerateToken(User user, IEnumerable<Claim>? existingClaims = null)
         {
