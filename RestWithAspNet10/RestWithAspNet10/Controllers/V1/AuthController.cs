@@ -54,5 +54,18 @@ namespace RestWithAspNet10.Controllers.V1
 
             return Ok(token);
         }
+
+
+        [HttpPost("revoke")]
+        [Authorize]
+        public IActionResult Revoke()
+        {
+            var username = User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(username)) return BadRequest("Invalid client request");
+
+            var result = _userAuthService.RevokeToken(username);
+            if (!result) return BadRequest("Invalid client request");
+            return NoContent();
+        }
     }
 }
